@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from .serializers import CartSerializer
 
-from store.models import Product, Cart
+from store.models import Product, Cart, WishList
 
 
 class CartViewSet(viewsets.ModelViewSet):
@@ -99,3 +99,10 @@ class WishListView(View):
             return render(request, 'wishlist.html')
         else:
             return redirect('login')
+
+
+def add_to_wishlist(request, id_):
+    if not WishList.objects.filter(user_id=request.user.id).filter(product_id=id_):
+        WishList.objects.create(product_id=id_, user_id=request.user.id)
+
+    return redirect('/shop')
