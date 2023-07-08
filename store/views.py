@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.db.models import Case, When, DecimalField, F, ExpressionWrapper
 
@@ -95,4 +95,7 @@ class WishListView(View):
 
     @staticmethod
     def get(request):
-        return render(request, 'wishlist.html')
+        if request.user.is_authenticated:
+            return render(request, 'wishlist.html')
+        else:
+            return redirect('login')
