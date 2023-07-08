@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from login.views import LoginView, LogoutView, CreateAccountView
-from store.urls import router as cart_router
+from store.urls import router as cart_router, wish_router
 
 
 urlpatterns = [
@@ -27,5 +27,6 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name="logout"),
     path('create/', CreateAccountView.as_view(), name="create"),
-    path('api/', include(cart_router.urls))
+    path('api/', include(cart_router.urls)),
+    path('api1/', include(wish_router.urls))
 ]

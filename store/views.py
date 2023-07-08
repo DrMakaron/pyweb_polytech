@@ -5,7 +5,7 @@ from django.db.models import Case, When, DecimalField, F, ExpressionWrapper
 from rest_framework import viewsets, response
 from rest_framework.permissions import IsAuthenticated
 
-from .serializers import CartSerializer
+from .serializers import CartSerializer, WishSerializer
 
 from store.models import Product, Cart, WishList
 
@@ -113,3 +113,28 @@ def add_to_wishlist(request, id_):
 def remove_from_wishlist(request, id_):
     WishList.objects.filter(user_id=request.user.id).filter(product_id=id_).delete()
     return redirect('/wishlist')
+
+
+class WishViewSet(viewsets.ModelViewSet):
+    queryset = WishList.objects.all()
+    serializer_class = WishSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        wish_items = self.get_queryset().filter(product__id=request.data.get('product'))
+        if wish_items:
+            return response.Response({'message': f'Product already in {request.user} wishlist'})
+
+        else:
+            wish_item = WishList(user_id=request.user.id, product_id=request.data.get('product'))
+            wish_item.save()
+
+        return response.Response({'message': f'Product added to {request.user} wishlist'})
+
+    def destroy(self, request, *args, **kwargs):
+        wish_item = self.get_queryset().get(id=kwargs['pk'])
+        wish_item.delete()
+        return response.Response({'message': 'Cart item deleted'})
