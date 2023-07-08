@@ -108,3 +108,8 @@ def add_to_wishlist(request, id_):
         WishList.objects.create(product_id=id_, user_id=request.user.id)
 
     return redirect('/shop')
+
+
+def remove_from_wishlist(request, id_):
+    WishList.objects.filter(user_id=request.user.id).filter(product_id=id_).delete()
+    return redirect('/wishlist')
