@@ -89,3 +89,10 @@ class ShopView(View):
                  'discount_value')
 
         return render(request, 'shop.html', context={'data': products})
+
+
+class WishListView(View):
+
+    @staticmethod
+    def get(request):
+        return render(request, 'wishlist.html')
