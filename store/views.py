@@ -96,7 +96,9 @@ class WishListView(View):
     @staticmethod
     def get(request):
         if request.user.is_authenticated:
-            return render(request, 'wishlist.html')
+            user_wishes = WishList.objects.filter(user_id=request.user.id)
+            products = Product.objects.filter(id__in=user_wishes)
+            return render(request, 'wishlist.html', context={'data': products})
         else:
             return redirect('login')
 
