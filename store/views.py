@@ -97,7 +97,6 @@ class WishListView(View):
     def get(request):
         if request.user.is_authenticated:
             user_wishes = WishList.objects.filter(user_id=request.user.id)
-            print(user_wishes.values('product_id'))
             products = Product.objects.filter(id__in=user_wishes.values('product_id'))
             return render(request, 'wishlist.html', context={'data': products})
         else:
