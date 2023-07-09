@@ -104,8 +104,9 @@ class WishListView(View):
 
 
 def add_to_wishlist(request, id_):
-    if not WishList.objects.filter(user_id=request.user.id).filter(product_id=id_):
-        WishList.objects.create(product_id=id_, user_id=request.user.id)
+    if request.user.is_authenticated:
+        if not WishList.objects.filter(user_id=request.user.id).filter(product_id=id_):
+            WishList.objects.create(product_id=id_, user_id=request.user.id)
 
     return redirect('/shop')
 
