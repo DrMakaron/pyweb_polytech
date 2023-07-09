@@ -47,7 +47,7 @@ class CreateAccountView(View):
             password = form.cleaned_data.get('password1')
             user = User.objects.create_user(username=username, email=email, password=password)
             user.save()
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             return redirect('store:shop')
 
         return render(request, "create_account.html",
